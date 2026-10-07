@@ -1,0 +1,9 @@
+{
+  "name": "Digital Wellbeing for Windows",
+  "short_name": "Wellbeing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f6fb",
+  "theme_color": "#7663d8",
+  "icons": [{"src": "/logo.svg", "sizes": "any", "type": "image/svg+xml"}]
+}

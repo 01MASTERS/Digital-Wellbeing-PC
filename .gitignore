@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller build outputs
+build/
+dist/
+*.spec
+
+# Type checking & test caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Local database & logs
+.local-data/
+*.log
+*.sqlite3
+
+# Test & smoke run artifacts
+artifacts/
+
+# Workspace & editor configurations
+.agents/
+.vscode/
+.idea/
