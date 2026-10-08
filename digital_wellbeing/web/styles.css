@@ -61,7 +61,7 @@
   font-synthesis: none;
 }
 
-[data-theme="dark"] {
+:root[data-theme="dark"] {
   color-scheme: dark;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
 
@@ -210,24 +210,20 @@ h1, h2, h3, h4, p { margin: 0; font-family: var(--font-sans); }
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #007aff, #5856d6);
-  color: #ffffff;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing: -0.5px;
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+  display: block;
+  object-fit: cover;
   flex: 0 0 38px;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
 }
 .brand img {
   flex: 0 0 auto;
   border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(0, 122, 255, 0.25);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.brand:hover img, .brand:hover .brand-badge { transform: scale(1.05); }
+.brand:hover .brand-badge, .brand:hover img {
+  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
 .brand strong { font-weight: 800; color: var(--blue); }
 
 .side-group-label {
@@ -1356,7 +1352,20 @@ h1, h2, h3, h4, p { margin: 0; font-family: var(--font-sans); }
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: all 0.15s ease;
+}
+.segment-btn:hover:not(.active) {
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.04);
+}
+:root[data-theme="dark"] .segment-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.06);
 }
 .segment-btn.active {
   background: var(--surface);
@@ -2077,65 +2086,71 @@ h1, h2, h3, h4, p { margin: 0; font-family: var(--font-sans); }
 }
 
 /* Dark Theme Specific Overrides for Style 2 Components */
-[data-theme="dark"] .hero-apple {
+:root[data-theme="dark"] .brand-badge {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+:root[data-theme="dark"] .brand:hover .brand-badge {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+:root[data-theme="dark"] .hero-apple {
   background: #18191f;
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
-[data-theme="dark"] .metric-card-apple {
+:root[data-theme="dark"] .metric-card-apple {
   background: #18191f;
   border-color: rgba(255, 255, 255, 0.08);
 }
-[data-theme="dark"] .metric-card-apple:hover {
+:root[data-theme="dark"] .metric-card-apple:hover {
   border-color: rgba(255, 255, 255, 0.16);
 }
-[data-theme="dark"] .limits-row {
+:root[data-theme="dark"] .limits-row {
   background: #1c1d22;
   border-color: rgba(255, 255, 255, 0.08);
 }
-[data-theme="dark"] .limits-row:hover {
+:root[data-theme="dark"] .limits-row:hover {
   background: #24252c;
   border-color: rgba(255, 255, 255, 0.16);
 }
-[data-theme="dark"] .pill-btn {
+:root[data-theme="dark"] .pill-btn {
   background: #24252c;
   border-color: rgba(255, 255, 255, 0.14);
   color: #ffffff;
 }
-[data-theme="dark"] .pill-btn:hover {
+:root[data-theme="dark"] .pill-btn:hover {
   background: #2d2e36;
   border-color: var(--blue);
   color: var(--blue);
 }
-[data-theme="dark"] .quick-preset-card {
+:root[data-theme="dark"] .quick-preset-card {
   border-color: rgba(10, 132, 255, 0.5);
   background: rgba(10, 132, 255, 0.12);
 }
-[data-theme="dark"] .modal-week-card {
+:root[data-theme="dark"] .modal-week-card {
   background: #1c1d22;
   border-color: rgba(255, 255, 255, 0.08);
 }
-[data-theme="dark"] .modal-metric-box {
+:root[data-theme="dark"] .modal-metric-box {
   background: #1c1d22;
   border-color: rgba(255, 255, 255, 0.08);
 }
-[data-theme="dark"] .day-by-day-card {
+:root[data-theme="dark"] .day-by-day-card {
   background: #18191f;
   border-color: rgba(255, 255, 255, 0.08);
 }
-[data-theme="dark"] .setting-section-card {
+:root[data-theme="dark"] .setting-section-card {
   background: #18191f;
   border-color: rgba(255, 255, 255, 0.08);
 }
-[data-theme="dark"] .setting-section-icon {
+:root[data-theme="dark"] .setting-section-icon {
   background: #24252c;
   border-color: rgba(255, 255, 255, 0.1);
 }
-[data-theme="dark"] .setting-number-wrap {
+:root[data-theme="dark"] .setting-number-wrap {
   background: #24252c;
   border-color: rgba(255, 255, 255, 0.1);
 }
-[data-theme="dark"] .day-pill-checkbox span {
+:root[data-theme="dark"] .day-pill-checkbox span {
   background: #24252c;
   border-color: rgba(255, 255, 255, 0.1);
 }

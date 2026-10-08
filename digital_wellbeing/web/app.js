@@ -1385,9 +1385,9 @@ function renderSettings() {
           </div>
           <div class="setting-control">
             <div class="segmented-control">
-              <button class="segment-btn ${state.theme === 'light' ? 'active' : ''}" type="button" data-action="set-theme" data-theme="light">${icon('sun', 'sm')} Light</button>
-              <button class="segment-btn ${state.theme === 'dark' ? 'active' : ''}" type="button" data-action="set-theme" data-theme="dark">${icon('moon', 'sm')} Dark</button>
-              <button class="segment-btn ${state.theme === 'auto' ? 'active' : ''}" type="button" data-action="set-theme" data-theme="auto">${icon('desktop', 'sm')} System</button>
+              <button class="segment-btn ${state.theme === 'light' ? 'active' : ''}" type="button" data-action="set-theme" data-theme="light" data-theme-value="light">${icon('sun', 'sm')} Light</button>
+              <button class="segment-btn ${state.theme === 'dark' ? 'active' : ''}" type="button" data-action="set-theme" data-theme="dark" data-theme-value="dark">${icon('moon', 'sm')} Dark</button>
+              <button class="segment-btn ${state.theme === 'auto' ? 'active' : ''}" type="button" data-action="set-theme" data-theme="auto" data-theme-value="auto">${icon('desktop', 'sm')} System</button>
             </div>
           </div>
         </div>
@@ -1788,7 +1788,7 @@ async function handleAction(button) {
     if (answer !== null) showToast('History was not deleted');
   }
   if (action === 'toggle-theme-quick') return toggleThemeQuick();
-  if (action === 'set-theme') return setTheme(button.dataset.theme);
+  if (action === 'set-theme') return setTheme(button.dataset.themeValue || button.dataset.theme);
   if (action === 'quit') {
     if (!window.confirm('Quit Digital Wellbeing? Activity tracking will stop until you start it again.')) return;
     await mutate('/api/quit', {}, '');

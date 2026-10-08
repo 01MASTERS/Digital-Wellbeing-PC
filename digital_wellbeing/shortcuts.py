@@ -53,4 +53,10 @@ def create_shortcuts() -> list[str]:
         except (OSError, RuntimeError) as error:
             print(f"Could not create {label} shortcut: {error}")
 
+    try:
+        import ctypes
+        ctypes.windll.shell32.SHChangeNotify(0x08000000, 0, None, None)  # SHCNE_ASSOCCHANGED
+    except Exception:
+        pass
+
     return created

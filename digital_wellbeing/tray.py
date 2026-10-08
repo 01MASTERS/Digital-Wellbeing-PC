@@ -2,8 +2,10 @@
 
 import logging
 import os
+import sys
 import threading
 from collections.abc import Callable
+from pathlib import Path
 
 import win32api  # type: ignore[import-untyped]
 import win32con  # type: ignore[import-untyped]
@@ -111,6 +113,25 @@ class TrayIcon:
         finally:
             win32gui.DestroyMenu(menu)
 
+    def _load_icon(self) -> int:
+        candidates = []
+        if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+            candidates.append(Path(sys._MEIPASS) / "assets" / "icon.ico")
+        candidates.append(Path(__file__).resolve().parent.parent / "assets" / "icon.ico")
+
+        for candidate in candidates:
+            if candidate.is_file():
+                try:
+                    icon_flags = win32con.LR_LOADFROMFILE | win32con.LR_DEFAULTSIZE
+                    hicon = win32gui.LoadImage(
+                        0, str(candidate), win32con.IMAGE_ICON, 0, 0, icon_flags
+                    )
+                    if hicon:
+                        return hicon
+                except (win32gui.error, OSError):
+                    LOGGER.debug("Could not load custom tray icon from %s", candidate)
+        return win32gui.LoadIcon(0, win32con.IDI_APPLICATION)
+
     def _run(self) -> None:
         try:
             class_name = f"DigitalWellbeingTray_{os.getpid()}"
@@ -122,7 +143,7 @@ class TrayIcon:
             self._hwnd = win32gui.CreateWindow(
                 class_name, class_name, 0, 0, 0, 0, 0, 0, 0, window_class.hInstance, None
             )
-            self._icon = win32gui.LoadIcon(0, win32con.IDI_APPLICATION)
+            self._icon = self._load_icon()
             data = (
                 self._hwnd,
                 0,
@@ -148,3 +169,9 @@ class TrayIcon:
                     pass
                 win32gui.DestroyWindow(self._hwnd)
                 self._hwnd = 0
+            if self._icon and self._icon != win32gui.LoadIcon(0, win32con.IDI_APPLICATION):
+                try:
+                    win32gui.DestroyIcon(self._icon)
+                except win32gui.error:
+                    pass
+                self._icon = 0

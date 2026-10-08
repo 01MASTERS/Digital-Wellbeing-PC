@@ -89,6 +89,10 @@ class ApiTests(unittest.TestCase):
             self.assertIn(response.headers.get("Content-Type"), ("image/png", "image/svg+xml"))
             self.assertGreater(len(response.read()), 0)
 
+        with urllib.request.urlopen(self.base + "/api/icon/digitalwellbeing.exe", timeout=3) as response:
+            self.assertEqual(response.headers.get("Content-Type"), "image/png")
+            self.assertGreater(len(response.read()), 0)
+
         with urllib.request.urlopen(self.base + "/api/icon/site/youtube.com", timeout=3) as response:
             self.assertIn(response.headers.get("Content-Type"), ("image/png", "image/svg+xml"))
             self.assertGreater(len(response.read()), 0)

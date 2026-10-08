@@ -6,6 +6,7 @@ import io
 import logging
 import os
 import shutil
+import sys
 import winreg
 from pathlib import Path
 
@@ -419,6 +420,34 @@ def get_app_icon(app_id: str, size: int = 48) -> tuple[bytes, str]:
     Returns (bytes, content_type).
     """
     clean_id = app_id.casefold()
+
+    # 0. First-party Digital Wellbeing app icon
+    if clean_id in {
+        "digitalwellbeing.exe",
+        "digitalwellbeing",
+        "digital wellbeing",
+        "digital_wellbeing.exe",
+        "screen_time_tracker.exe",
+    }:
+        if getattr(sys, "frozen", False):
+            root_dir = Path(getattr(sys, "_MEIPASS", Path(sys.executable).parent))
+        else:
+            root_dir = Path(__file__).resolve().parent.parent
+        app_icon_path = root_dir / "assets" / "icon.png"
+        if not app_icon_path.is_file():
+            app_icon_path = root_dir / "digital_wellbeing" / "web" / "icon-512.png"
+        if app_icon_path.is_file():
+            try:
+                master_img = Image.open(app_icon_path).convert("RGBA")
+                resized_img = master_img.resize((size, size), Image.Resampling.LANCZOS)
+                buf = io.BytesIO()
+                resized_img.save(buf, format="PNG")
+                png_data = buf.getvalue()
+                _MEMORY_ICON_CACHE[clean_id] = png_data
+                _save_cached_on_disk(f"{clean_id}.png", png_data)
+                return png_data, "image/png"
+            except (OSError, ValueError):
+                pass
 
     # 1. Memory Cache
     if clean_id in _MEMORY_ICON_CACHE:

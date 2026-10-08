@@ -1,39 +1,41 @@
-"""Recreate the Windows application icon from the dashboard mark."""
+"""Recreate the Windows application icon and multi-resolution ICO from the polished Time Balance mark."""
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageEnhance
 
 
 def main() -> None:
-    size = 256
-    image = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    mask = Image.new("L", (size, size), 0)
-    mask_draw = ImageDraw.Draw(mask)
-    mask_draw.rounded_rectangle((0, 0, size - 1, size - 1), radius=56, fill=255)
+    root = Path(__file__).resolve().parent.parent
+    master_candidates = [
+        root / "assets" / "icon.png",
+        root / "artifacts" / "polished_master_1024.png",
+    ]
+    master_path = next((p for p in master_candidates if p.is_file()), None)
+    if master_path is None:
+        raise FileNotFoundError("Master icon image not found in assets or artifacts")
 
-    gradient = Image.new("RGBA", (size, size))
-    pixels = gradient.load()
-    assert pixels is not None
-    for y in range(size):
-        for x in range(size):
-            blend = (x + y) / (2 * (size - 1))
-            pixels[x, y] = (
-                int(167 * (1 - blend) + 100 * blend),
-                int(143 * (1 - blend) + 81 * blend),
-                int(250 * (1 - blend) + 206 * blend),
-                255,
-            )
-    image.paste(gradient, (0, 0), mask)
-    draw = ImageDraw.Draw(image)
-    draw.arc((50, 50, 206, 206), 33, 342, fill="white", width=18)
-    draw.line(((178, 68), (178, 105), (216, 105)), fill="white", width=18, joint="curve")
-    draw.ellipse((112, 112, 144, 144), fill="white")
+    master = Image.open(master_path).convert("RGBA")
+    sizes = [16, 32, 48, 64, 128, 256]
+    imgs = {}
+    for s in sizes:
+        im = master.resize((s, s), Image.Resampling.LANCZOS)
+        if s <= 32:
+            im = ImageEnhance.Sharpness(im).enhance(1.25)
+        imgs[s] = im
 
-    target = Path(__file__).resolve().parent.parent / "assets" / "icon.ico"
+    target = root / "assets" / "icon.ico"
     target.parent.mkdir(exist_ok=True)
-    image.save(target, sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
-    print(target)
+
+    im256 = imgs[256]
+    others = [imgs[s] for s in [16, 32, 48, 64, 128]]
+    im256.save(
+        target,
+        format="ICO",
+        sizes=[(s, s) for s in sizes],
+        append_images=others,
+    )
+    print(f"Generated multi-resolution ICO: {target}")
 
 
 if __name__ == "__main__":
